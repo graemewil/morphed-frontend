@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morphed - AI-Powered HubSpot Optimization</title>
+    <meta name="description" content="Transform your HubSpot with AI-powered optimization. Get instant blueprints, portal audits, and implementation guidance.">
+    <link rel="canonical" href="https://morphed.io">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+    
+    <script type="text/babel">
+        const { useState, useRef, useEffect } = React;
+        
+        // TaskAccordion Component
+        function TaskAccordion({ steps }) {
+            const [openIndex, setOpenIndex] = useState(null);
+
+            const toggle = (index) => {
+                setOpenIndex(openIndex === index ? null : index);
+            };
+
+            return React.createElement('div', { className: "space-y-3" },
+                steps.map((step, idx) =>
+                    React.createElement('div', { key: idx, className: "border rounded-md" },
+                        React.createElement('button', {
+                            onClick: () => toggle(idx),
+                            className: "w-full text-left px-4 py-2 bg-blue-50 hover:bg-blue-100 font-medium text-gray-800"
+                        }, step.title),
+                        openIndex === idx && React.createElement('div', { className: "px-4 py-3 bg-white text-gray-700 text-sm" },
+                            React.createElement('p', {}, React.createElement('strong', {}, "Description: "), step.description),
+                            step.reason && React.createElement('p', {}, React.createElement('strong', {}, "Why: "), step.reason),
+                            step.impact && React.createElement('p', {}, React.createElement('strong', {}, "Impact: "), step.impact)
+                        )
+                    )
+                )
+            );
+        }
+
+        // BlueprintDetail Component
+        function BlueprintDetail({ blueprint }) {
+            const {
+                title = "Blueprint Title",
+                confidence = "98%",
+                summary,
+                rootCauses = [],
+                strategicFramework = [],
+                implementationSteps = [],
+                workflows = [],
+                partners = [],
+                roi = {},
+                recommendedApps = []
+            } = blueprint;
+
+            return React.createElement('div', { className: "max-w-4xl mx-auto p-6 bg-white rounded shadow-md" },
+                React.createElement('h1', { className: "text-2xl font-bold text-blue-900 mb-2" }, title),
+                React.createElement('p', { className: "text-sm text-gray-600 mb-4" }, `Confidence Score: ${confidence} – Tier 1++`),
+
+                // Problem Summary
+                React.createElement('section', { className: "mb-6" },
+                    React.createElement('h2', { className: "text-lg font-semibold mb-2 text-gray-800" }, "🧩 Problem Summary"),
+                    React.createElement('p', { className: "text-gray-700" }, summary),
+                    rootCauses.length > 0 && React.createElement('ul', { className: "list-disc list-inside text-gray-600 mt-2" },
+                        rootCauses.map((cause, idx) => React.createElement('li', { key: idx }, cause))
+                    )
+                ),
+
+                // Strategic Framework
+                strategicFramework.length > 0 && React.createElement('section', { className: "mb-6" },
+                    React.createElement('h2', { className: "text-lg font-semibold text-gray-800 mb-2" }, "💡 Strategic Framework"),
+                    React.createElement('ul', { className: "list-decimal list-inside text-gray-700" },
+                        strategicFramework.map((item, idx) => React.createElement('li', { key: idx }, item))
+                    )
+                ),
+
+                // Implementation Plan
+                implementationSteps.length > 0 && React.createElement('section', { className: "mb-6" },
+                    React.createElement('h2', { className: "text-lg font-semibold text-gray-800 mb-2" }, "🛠️ Implementation Plan"),
+                    React.createElement(TaskAccordion, { steps: implementationSteps })
+                ),
+
+                // Automation Workflows
+                workflows.length > 0 && React.createElement('section', { className: "mb-6" },
+                    React.createElement('h2', { className: "text-lg font-semibold text-gray-800 mb-2" }, "⚙️ Automation Workflows"),
+                    React.createElement('ul', { className: "list-disc list-inside text-gray-700" },
+                        workflows.map((flow, idx) => React.createElement('li', { key: idx }, flow))
+                    )
+                ),
+
+                // Partner Recommendations
+                partners.length > 0 && React.createElement('section', { className: "mb-6" },
+                    React.createElement('h2', { className: "text-lg font-semibold text-gray-800 mb-2" }, "🤝 Partner Recommendations"),
+                    partners.map((p, idx) =>
+                        React.createElement('div', { key: idx, className: "border p-3 mb-2 rounded text-gray-700 bg-gray-50" },
+                            React.createElement('strong', {}, p.name), ` (${p.tier}) – ${p.summary}`,
+                            p.caseStudy && React.createElement('div', { className: "text-sm italic mt-1" }, `Case Study: ${p.caseStudy}`)
+                        )
+                    )
+                ),
+
+                // ROI Projections
+                Object.keys(roi).length > 0 && React.createElement('section', { className: "mb-6" },
+                    React.createElement('h2', { className: "text-lg font-semibold text-gray-800 mb-2" }, "📈 ROI Projections"),
+                    React.createElement('ul', { className: "text-gray-700" },
+                        Object.entries(roi).map(([k, v]) =>
+                            React.createElement('li', { key: k }, React.createElement('strong', {}, k), `: ${v}`)
+                        )
+                    )
+                ),
+
+                // Recommended Apps
+                recommendedApps.length > 0 && React.createElement('section', {},
+                    React.createElement('h2', { className: "text-lg font-semibold text-gray-800 mb-2" }, "🔌 Recommended HubSpot Apps"),
+                    React.createElement('ul', { className: "list-disc list-inside text-gray-700" },
+                        recommendedApps.map((app, idx) => React.createElement('li', { key: idx }, app))
+                    )
+                )
+            );
+        }
+        
+        function HomePage() {
+            const [input, setInput] = useState('');
+            const [messages, setMessages] = useState([]);
+            const [loading, setLoading] = useState(false);
+            const [selectedPlan, setSelectedPlan] = useState('growth');
+            const messagesRef = useRef(null);
+
+            useEffect(() => {
+                if (messagesRef.current) {
+                    messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+                }
+            }, [messages]);
+
+            const generateBlueprint = async () => {
+                if (!input.trim() || loading) return;
+
+                setLoading(true);
+                setMessages([]);
+
+                try {
+                    const response = await fetch('/api/consultant/query', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: `Generate a comprehensive Tier 1++ blueprint for: ${input}`,
+                            userId: `blueprint_user_${Date.now()}`,
+                            context: {
+                                source: 'homepage_blueprint',
+                                blueprint_only: true,
+                                tier: 'Enterprise',
+                                persona: 'Chief Revenue Officer'
+                            }
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('Consultant API Response:', data); // Debug logging
+                        
+                        let blueprintContent = '';
+                        let blueprintData = null;
+                        
+                        // Handle consultant mode responses
+                        if (data.type === 'consultant_advice' && data.advice) {
+                            blueprintContent = data.advice;
+                            blueprintData = {
+                                title: "Tier 1++ Strategic Blueprint",
+                                confidence: "95%+",
+                                persona: data.persona,
+                                portal_context: data.portal_context,
+                                implementation_steps: data.implementation_steps,
+                                next_actions: data.next_actions
+                            };
+                        }
+                        // Handle custom consultant advice responses
+                        else if (data.type === 'custom_consultant_advice' && data.advice) {
+                            blueprintContent = data.advice;
+                            blueprintData = {
+                                title: "AI-Generated Strategic Blueprint",
+                                confidence: `${Math.round(data.confidence * 100)}%+`,
+                                persona: data.persona || "Business Leader",
+                                portal_context: data.portal_context
+                            };
+                        }
+                        // Handle direct response content
+                        else if (data.response && typeof data.response === 'string') {
+                            blueprintContent = data.response;
+                            blueprintData = {
+                                title: "Comprehensive Blueprint",
+                                confidence: "95%+"
+                            };
+                        }
+                        // Handle task lookup responses
+                        else if (data.type === 'task_lookup' && data.content && data.content.message) {
+                            blueprintContent = data.content.message;
+                            blueprintData = data.content;
+                        }
+                        // Handle clarification requests
+                        else if (data.type === 'clarification_request' && data.content && data.content.message) {
+                            blueprintContent = data.content.message;
+                            if (data.content.suggestions) {
+                                blueprintContent += '\n\n**Suggestions:**\n';
+                                data.content.suggestions.forEach(suggestion => {
+                                    blueprintContent += `• ${suggestion}\n`;
+                                });
+                            }
+                            blueprintData = data.content;
+                        }
+                        // Handle general responses with message content
+                        else if (data.content && data.content.message && typeof data.content.message === 'string') {
+                            blueprintContent = data.content.message;
+                            blueprintData = data.content;
+                        }
+                        // Handle structured blueprint responses - check direct content first
+                        else if (data.content && data.content.title && data.content.ai_generated_analysis) {
+                            // Direct blueprint structure from API logs
+                            const blueprint = data.content;
+                            blueprintData = blueprint;
+                            
+                            console.log('Blueprint analysis data:', blueprint.ai_generated_analysis);
+                            
+                            blueprintContent = `**${blueprint.title}**\n\n`;
+                            blueprintContent += `**Confidence Score:** ${blueprint.score_evaluation?.score || 95}% (${blueprint.score_evaluation?.grade || 'Tier 1++'})\n\n`;
+                            
+                            if (blueprint.ai_generated_analysis?.executive_summary) {
+                                blueprintContent += `**Executive Summary:**\n${blueprint.ai_generated_analysis.executive_summary}\n\n`;
+                            }
+                            
+                            if (blueprint.ai_generated_analysis?.root_cause_analysis) {
+                                blueprintContent += `**Root Cause Analysis:**\n${blueprint.ai_generated_analysis.root_cause_analysis}\n\n`;
+                            }
+                            
+                            // Display strategic solutions array
+                            if (blueprint.ai_generated_analysis?.strategic_solution_framework && Array.isArray(blueprint.ai_generated_analysis.strategic_solution_framework) && blueprint.ai_generated_analysis.strategic_solution_framework.length > 0) {
+                                blueprintContent += `**Strategic Solution Framework:**\n`;
+                                blueprint.ai_generated_analysis.strategic_solution_framework.forEach((solution, index) => {
+                                    blueprintContent += `${index + 1}. ${solution}\n`;
+                                });
+                                blueprintContent += '\n';
+                            }
+                            
+                            // Display implementation plan array
+                            if (blueprint.ai_generated_analysis?.detailed_implementation_plan && Array.isArray(blueprint.ai_generated_analysis.detailed_implementation_plan) && blueprint.ai_generated_analysis.detailed_implementation_plan.length > 0) {
+                                blueprintContent += `**Implementation Plan:**\n`;
+                                blueprint.ai_generated_analysis.detailed_implementation_plan.forEach((step, index) => {
+                                    blueprintContent += `${index + 1}. ${step}\n`;
+                                });
+                                blueprintContent += '\n';
+                            }
+                            
+                            // Display automation workflows array
+                            if (blueprint.ai_generated_analysis?.automation_workflows && Array.isArray(blueprint.ai_generated_analysis.automation_workflows) && blueprint.ai_generated_analysis.automation_workflows.length > 0) {
+                                blueprintContent += `**Automation Workflows:**\n`;
+                                blueprint.ai_generated_analysis.automation_workflows.forEach((workflow, index) => {
+                                    blueprintContent += `${index + 1}. ${workflow}\n`;
+                                });
+                                blueprintContent += '\n';
+                            }
+                            
+                            // Display partner recommendations array
+                            if (blueprint.ai_generated_analysis?.partner_recommendations && Array.isArray(blueprint.ai_generated_analysis.partner_recommendations) && blueprint.ai_generated_analysis.partner_recommendations.length > 0) {
+                                blueprintContent += `**Partner Recommendations:**\n`;
+                                blueprint.ai_generated_analysis.partner_recommendations.forEach(partner => {
+                                    blueprintContent += `• **${partner.name}** (${partner.tier}) - ${partner.specialty}\n`;
+                                    if (partner.case_study) {
+                                        blueprintContent += `  Case Study: ${partner.case_study}\n`;
+                                    }
+                                });
+                                blueprintContent += '\n';
+                            }
+                            
+                            // Display ROI projections
+                            if (blueprint.ai_generated_analysis?.roi_projections) {
+                                const roi = blueprint.ai_generated_analysis.roi_projections;
+                                blueprintContent += `**ROI Projections:**\n`;
+                                if (roi.efficiency_gain) blueprintContent += `• Efficiency Gain: ${roi.efficiency_gain}\n`;
+                                if (roi.revenue_impact) blueprintContent += `• Revenue Impact: ${roi.revenue_impact}\n`;
+                                if (roi.conversion_lift) blueprintContent += `• Conversion Lift: ${roi.conversion_lift}\n`;
+                                if (roi.timeline) blueprintContent += `• Timeline: ${roi.timeline}\n`;
+                                blueprintContent += '\n';
+                            }
+                            
+                            if (blueprint.ai_generated_analysis?.recommended_apps?.length > 0) {
+                                blueprintContent += `**Recommended HubSpot Apps:**\n`;
+                                blueprint.ai_generated_analysis.recommended_apps.slice(0, 3).forEach(app => {
+                                    blueprintContent += `• ${app.name || app}\n`;
+                                });
+                                blueprintContent += '\n';
+                            }
+                        } else if (data.content && data.content.type === 'structured_blueprint') {
+                            const blueprint = data.content.content;
+                            blueprintData = blueprint;
+                            
+                            blueprintContent = `**${blueprint.title}**\n\n`;
+                            blueprintContent += `**Confidence Score:** ${blueprint.score_evaluation?.score || 95}% (${blueprint.score_evaluation?.grade || 'Tier 1++'})\n\n`;
+                            
+                            if (blueprint.ai_generated_analysis?.executive_summary) {
+                                blueprintContent += `**Executive Summary:**\n${blueprint.ai_generated_analysis.executive_summary}\n\n`;
+                            }
+                            
+                            if (blueprint.ai_generated_analysis?.root_cause_analysis) {
+                                blueprintContent += `**Root Cause Analysis:**\n${blueprint.ai_generated_analysis.root_cause_analysis}\n\n`;
+                            }
+                            
+                            // Display strategic solutions array for second structure
+                            if (blueprint.ai_generated_analysis?.strategic_solution_framework && Array.isArray(blueprint.ai_generated_analysis.strategic_solution_framework) && blueprint.ai_generated_analysis.strategic_solution_framework.length > 0) {
+                                blueprintContent += `**Strategic Solution Framework:**\n`;
+                                blueprint.ai_generated_analysis.strategic_solution_framework.forEach((solution, index) => {
+                                    blueprintContent += `${index + 1}. ${solution}\n`;
+                                });
+                                blueprintContent += '\n';
+                            }
+                            
+                            // Display implementation plan array for second structure
+                            if (blueprint.ai_generated_analysis?.detailed_implementation_plan && Array.isArray(blueprint.ai_generated_analysis.detailed_implementation_plan) && blueprint.ai_generated_analysis.detailed_implementation_plan.length > 0) {
+                                blueprintContent += `**Implementation Plan:**\n`;
+                                blueprint.ai_generated_analysis.detailed_implementation_plan.forEach((step, index) => {
+                                    blueprintContent += `${index + 1}. ${step}\n`;
+                                });
+                                blueprintContent += '\n';
+                            }
+                            
+                            // Display automation workflows array for second structure
+                            if (blueprint.ai_generated_analysis?.automation_workflows && Array.isArray(blueprint.ai_generated_analysis.automation_workflows) && blueprint.ai_generated_analysis.automation_workflows.length > 0) {
+                                blueprintContent += `**Automation Workflows:**\n`;
+                                blueprint.ai_generated_analysis.automation_workflows.forEach((workflow, index) => {
+                                    blueprintContent += `${index + 1}. ${workflow}\n`;
+                                });
+                                blueprintContent += '\n';
+                            }
+                            
+                            // Display partner recommendations array for second structure
+                            if (blueprint.ai_generated_analysis?.partner_recommendations && Array.isArray(blueprint.ai_generated_analysis.partner_recommendations) && blueprint.ai_generated_analysis.partner_recommendations.length > 0) {
+                                blueprintContent += `**Partner Recommendations:**\n`;
+                                blueprint.ai_generated_analysis.partner_recommendations.forEach(partner => {
+                                    blueprintContent += `• **${partner.name}** (${partner.tier}) - ${partner.specialty}\n`;
+                                    if (partner.case_study) {
+                                        blueprintContent += `  Case Study: ${partner.case_study}\n`;
+                                    }
+                                });
+                                blueprintContent += '\n';
+                            }
+                            
+                            // Display ROI projections for second structure
+                            if (blueprint.ai_generated_analysis?.roi_projections) {
+                                const roi = blueprint.ai_generated_analysis.roi_projections;
+                                blueprintContent += `**ROI Projections:**\n`;
+                                if (roi.efficiency_gain) blueprintContent += `• Efficiency Gain: ${roi.efficiency_gain}\n`;
+                                if (roi.revenue_impact) blueprintContent += `• Revenue Impact: ${roi.revenue_impact}\n`;
+                                if (roi.conversion_lift) blueprintContent += `• Conversion Lift: ${roi.conversion_lift}\n`;
+                                if (roi.timeline) blueprintContent += `• Timeline: ${roi.timeline}\n`;
+                                blueprintContent += '\n';
+                            }
+                            
+                            if (blueprint.ai_generated_analysis?.recommended_apps?.length > 0) {
+                                blueprintContent += `**Recommended HubSpot Apps:**\n`;
+                                blueprint.ai_generated_analysis.recommended_apps.slice(0, 3).forEach(app => {
+                                    blueprintContent += `• ${app.name || app}\n`;
+                                });
+                                blueprintContent += '\n';
+                            }
+                            
+                        } else if (data.response && typeof data.response === 'string') {
+                            blueprintContent = data.response;
+                        } else if (data.content && data.content.message) {
+                            blueprintContent = data.content.message;
+                        } else if (data.content && data.content.content && data.content.content.ai_generated_analysis) {
+                            // Handle case where structured data exists but wasn't caught above
+                            const blueprint = data.content.content;
+                            blueprintData = blueprint;
+                            
+                            blueprintContent = `**${blueprint.title || 'Comprehensive Blueprint'}**\n\n`;
+                            blueprintContent += `**Confidence Score:** ${blueprint.score_evaluation?.score || 95}% (${blueprint.score_evaluation?.grade || 'Tier 1++'})\n\n`;
+                            
+                            if (blueprint.ai_generated_analysis?.executive_summary) {
+                                blueprintContent += `**Executive Summary:**\n${blueprint.ai_generated_analysis.executive_summary}\n\n`;
+                            }
+                            
+                            if (blueprint.ai_generated_analysis?.root_cause_analysis) {
+                                blueprintContent += `**Root Cause Analysis:**\n${blueprint.ai_generated_analysis.root_cause_analysis}\n\n`;
+                            }
+                        } else {
+                            // Parse any remaining response structure
+                            console.log('Parsing response structure:', JSON.stringify(data, null, 2));
+                            
+                            // Check if content is nested deeper in the response
+                            if (data.content && typeof data.content === 'object') {
+                                const content = data.content;
+                                if (content.title) {
+                                    blueprintContent = `**${content.title}**\n\n`;
+                                    blueprintData = content;
+                                }
+                                if (content.ai_generated_analysis) {
+                                    if (content.ai_generated_analysis.executive_summary) {
+                                        blueprintContent += `**Executive Summary:**\n${content.ai_generated_analysis.executive_summary}\n\n`;
+                                    }
+                                    if (content.ai_generated_analysis.root_cause_analysis) {
+                                        blueprintContent += `**Root Cause Analysis:**\n${content.ai_generated_analysis.root_cause_analysis}\n\n`;
+                                    }
+                                }
+                            }
+                            
+                            // If still no content, show the raw response for debugging
+                            if (!blueprintContent || blueprintContent.trim() === '') {
+                                blueprintContent = JSON.stringify(data, null, 2);
+                            }
+                        }
+                        
+                        // Parse blueprint data for interactive display
+                        const parseBlueprintData = (data) => {
+                            if (typeof data === 'string') {
+                                try {
+                                    data = JSON.parse(data);
+                                } catch (e) {
+                                    return null;
+                                }
+                            }
+                            
+                            // Extract from nested ai_generated_analysis structure
+                            const analysis = data.ai_generated_analysis || data;
+                            const scoreEval = data.score_evaluation || {};
+                            
+                            // Parse implementation steps from detailed_implementation_plan
+                            const parseImplementationSteps = (steps) => {
+                                if (!steps || !Array.isArray(steps)) return [];
+                                return steps.map((step, idx) => ({
+                                    title: step.title || `Step ${idx + 1}`,
+                                    description: step.description || step.summary || step,
+                                    reason: step.reason || step.why || "",
+                                    impact: step.impact || step.expected_outcome || ""
+                                }));
+                            };
+                            
+                            // Parse partner recommendations
+                            const parsePartners = (partners) => {
+                                if (!partners || !Array.isArray(partners)) return [];
+                                return partners.map(partner => ({
+                                    name: partner.name || partner.company || partner,
+                                    tier: partner.tier || partner.level || "Preferred",
+                                    summary: partner.summary || partner.description || "",
+                                    caseStudy: partner.caseStudy || partner.case_study || ""
+                                }));
+                            };
+                            
+                            return {
+                                title: data.title || "AI-Generated Blueprint",
+                                confidence: scoreEval.score ? `${scoreEval.score}%` : "95%+",
+                                summary: analysis.executive_summary || data.summary || "Comprehensive implementation strategy",
+                                rootCauses: analysis.root_causes || data.rootCauses || [],
+                                strategicFramework: analysis.strategic_solution_framework || analysis.strategic_framework || data.strategy || [],
+                                implementationSteps: parseImplementationSteps(analysis.detailed_implementation_plan || data.implementationSteps || data.tasks),
+                                workflows: analysis.automation_workflows || data.workflows || [],
+                                partners: parsePartners(analysis.partner_recommendations || data.partners),
+                                roi: analysis.roi_projections || data.roi || {},
+                                recommendedApps: analysis.recommended_apps || data.recommendedApps || []
+                            };
+                        };
+
+                        const blueprintStructured = parseBlueprintData(blueprintData || data.data || data.content);
+
+                        const arbotMessage = {
+                            type: 'arbot',
+                            content: blueprintContent,
+                            blueprintData: blueprintStructured,
+                            timestamp: new Date().toLocaleTimeString(),
+                            suggestions: data.content?.suggestions || []
+                        };
+                        setMessages([arbotMessage]);
+                    } else {
+                        throw new Error('Failed to generate blueprint');
+                    }
+                } catch (error) {
+                    console.error('Blueprint generation error:', error);
+                    const errorMessage = {
+                        type: 'arbot',
+                        content: 'Unable to generate blueprint. Please try again.',
+                        timestamp: new Date().toLocaleTimeString(),
+                        data: null
+                    };
+                    setMessages([errorMessage]);
+                }
+
+                setLoading(false);
+            };
+
+            const handleConvertToProject = (tier) => {
+                setSelectedPlan(tier);
+                window.location.href = '/pricing';
+            };
+
+            const initiatePayment = async () => {
+                try {
+                    const response = await fetch('/api/payment/initiate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            tier: selectedPlan,
+                            userId: `guest_${Date.now()}`,
+                            email: 'guest@morphed.io'
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        window.location.href = data.authorization_url;
+                    }
+                } catch (error) {
+                    console.error('Payment initiation failed:', error);
+                }
+            };
+
+            return React.createElement('div', { className: "min-h-screen bg-gradient-to-br from-blue-50 to-purple-50" },
+                // Header
+                React.createElement('nav', { className: "bg-white shadow-sm border-b border-gray-200" },
+                    React.createElement('div', { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" },
+                        React.createElement('div', { className: "flex justify-between items-center h-16" },
+                            React.createElement('a', { href: "/", className: "flex items-center gap-3" },
+                                React.createElement('div', { className: "bg-blue-600 text-white p-2 rounded-lg" },
+                                    React.createElement('svg', { className: "w-6 h-6", fill: "currentColor", viewBox: "0 0 24 24" },
+                                        React.createElement('path', { d: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" })
+                                    )
+                                ),
+                                React.createElement('span', { className: "text-xl font-bold text-gray-900" }, "Morphed")
+                            ),
+                            React.createElement('div', { className: "flex items-center" },
+                                // Desktop menu
+                                React.createElement('div', { className: "hidden md:flex items-center space-x-8" },
+                                    React.createElement('a', { href: "/about", className: "text-gray-600 hover:text-gray-900" }, "About"),
+                                    React.createElement('a', { href: "/how-it-works", className: "text-gray-600 hover:text-gray-900" }, "How It Works"),
+                                    React.createElement('a', { href: "/pricing", className: "text-gray-600 hover:text-gray-900" }, "Pricing"),
+                                    React.createElement('a', { 
+                                        href: "/auth/connect", 
+                                        className: "bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                                    }, "Connect HubSpot")
+                                ),
+                                // Mobile menu button
+                                React.createElement('button', { 
+                                    className: "md:hidden p-2 rounded-lg hover:bg-gray-100",
+                                    onClick: () => {
+                                        const menu = document.getElementById('mobile-menu');
+                                        if (menu) {
+                                            menu.classList.toggle('hidden');
+                                        }
+                                    }
+                                },
+                                    React.createElement('svg', { className: "w-6 h-6", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" },
+                                        React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M4 6h16M4 12h16m-7 6h7" })
+                                    )
+                                )
+                            ),
+                            // Mobile menu
+                            React.createElement('div', { 
+                                id: "mobile-menu",
+                                className: "absolute top-16 left-0 right-0 bg-white shadow-lg border-t border-gray-200 md:hidden hidden"
+                            },
+                                React.createElement('div', { className: "px-4 py-6 space-y-4" },
+                                    React.createElement('a', { href: "/about", className: "block text-gray-600 hover:text-gray-900 py-2" }, "About"),
+                                    React.createElement('a', { href: "/how-it-works", className: "block text-gray-600 hover:text-gray-900 py-2" }, "How It Works"),
+                                    React.createElement('a', { href: "/pricing", className: "block text-gray-600 hover:text-gray-900 py-2" }, "Pricing"),
+                                    React.createElement('a', { 
+                                        href: "/auth/connect", 
+                                        className: "block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-center"
+                                    }, "Connect HubSpot")
+                                )
+                            )
+                        )
+                    )
+                ),
+
+                // Hero Section
+                React.createElement('div', { className: "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12" },
+                    React.createElement('div', { className: "text-center mb-12" },
+                        React.createElement('h1', { className: "text-3xl md:text-5xl font-bold text-gray-900 mb-6" },
+                            "Transform Your HubSpot Into A ",
+                            React.createElement('span', { className: "text-blue-600" }, "Strategic Growth Engine")
+                        ),
+                        React.createElement('p', { className: "text-base md:text-lg text-gray-600 max-w-3xl mx-auto mb-8" },
+                            "Through live blueprint generation, ROI-backed planning, and intelligent partner recommendations, Morphed helps you move from business problem to execution with unmatched clarity and speed."
+                        ),
+                        React.createElement('div', { className: "flex flex-col sm:flex-row gap-4 justify-center mb-12" },
+                            React.createElement('a', { 
+                                href: "/how-it-works",
+                                className: "bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors"
+                            }, "See How It Works"),
+                            React.createElement('a', { 
+                                href: "/auth/login",
+                                className: "border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-colors"
+                            }, "Start Free Analysis")
+                        )
+                    ),
+
+                    // Blueprint Generator
+                    React.createElement('div', { className: "bg-white rounded-2xl shadow-xl border border-gray-200 p-8 mb-16" },
+                        React.createElement('div', { className: "text-center mb-8" },
+                            React.createElement('h2', { className: "text-2xl font-bold text-gray-900 mb-4" },
+                                "Generate Your Free Tier 1++ Blueprint"
+                            ),
+                            React.createElement('p', { className: "text-gray-600" },
+                                "Describe your HubSpot challenge and get an instant strategic implementation plan"
+                            )
+                        ),
+
+                        React.createElement('div', { className: "space-y-6" },
+                            // Input Area
+                            React.createElement('div', { className: "flex flex-col sm:flex-row gap-4" },
+                                React.createElement('input', {
+                                    type: "text",
+                                    value: input,
+                                    onChange: (e) => setInput(e.target.value),
+                                    onKeyPress: (e) => {
+                                        if (e.key === 'Enter' && !loading) {
+                                            generateBlueprint();
+                                        }
+                                    },
+                                    placeholder: "Enter your business challenge or objective...",
+                                    className: "flex-1 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
+                                }),
+                                React.createElement('button', {
+                                    onClick: generateBlueprint,
+                                    disabled: loading || !input.trim(),
+                                    className: "px-8 py-4 bg-blue-700 text-white rounded-lg hover:bg-blue-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-lg font-semibold shadow-lg"
+                                }, loading ? 'Generating...' : 'Generate Free Blueprint')
+                            ),
+
+                            // Loading indicator
+                            loading && React.createElement('div', { className: "bg-blue-50 rounded-xl p-8 text-center" },
+                                React.createElement('div', { className: "flex items-center justify-center gap-3 mb-4" },
+                                    React.createElement('div', { className: "animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600" }),
+                                    React.createElement('span', { className: "text-blue-600 font-medium" }, "Generating your Tier 1++ blueprint...")
+                                ),
+                                React.createElement('p', { className: "text-gray-600 text-sm" }, "Analyzing your request and creating a comprehensive implementation plan...")
+                            ),
+
+                            // Blueprint Output - only show after generation is complete
+                            (messages.length > 0 && !loading) && React.createElement('div', { className: "bg-gray-50 rounded-xl p-6" },
+                                React.createElement('div', { ref: messagesRef, className: "space-y-4" },
+                                    messages.map((message, index) =>
+                                        React.createElement('div', { key: index, className: "flex justify-start" },
+                                            React.createElement('div', { className: "bg-white rounded-lg p-6 shadow-sm max-w-full w-full" },
+                                                React.createElement('div', { className: "flex items-start gap-3 mb-4" },
+                                                    React.createElement('div', { className: "bg-blue-100 text-blue-600 p-2 rounded-full shrink-0" },
+                                                        React.createElement('svg', { className: "w-5 h-5", fill: "currentColor", viewBox: "0 0 24 24" },
+                                                            React.createElement('path', { d: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" })
+                                                        )
+                                                    ),
+                                                    React.createElement('div', { className: "flex-1" },
+                                                        React.createElement('div', { className: "text-sm font-semibold text-gray-900 mb-4" }, "Tier 1++ Blueprint"),
+                                                        
+                                                        // Render interactive blueprint if structured data is available
+                                                        message.blueprintData ? 
+                                                            React.createElement(BlueprintDetail, { blueprint: message.blueprintData }) :
+                                                            React.createElement('div', { 
+                                                                className: "text-gray-700 text-sm leading-relaxed prose prose-sm max-w-none",
+                                                                dangerouslySetInnerHTML: { __html: message.content }
+                                                            }),
+                                                        
+                                                        // Show suggestions if available
+                                                        message.suggestions && message.suggestions.length > 0 && React.createElement('div', { className: "mt-4 pt-4 border-t border-gray-100" },
+                                                            React.createElement('h4', { className: "text-sm font-semibold text-gray-800 mb-2" }, "Suggested Follow-Ups"),
+                                                            React.createElement('ul', { className: "text-xs text-gray-600 space-y-1" },
+                                                                message.suggestions.map((suggestion, idx) =>
+                                                                    React.createElement('li', { key: idx, className: "list-disc list-inside" }, suggestion)
+                                                                )
+                                                            )
+                                                        )
+                                                    )
+                                                ),
+                                                
+                                                // Conversion CTAs - only show after blueprint is fully generated
+                                                React.createElement('div', { className: "mt-6 pt-4 border-t border-gray-200" },
+                                                    React.createElement('p', { className: "text-sm text-gray-600 mb-4" }, "Convert this blueprint to a project and unlock full features:"),
+                                                    React.createElement('div', { className: "flex flex-wrap gap-3" },
+                                                        React.createElement('div', { className: "relative group" },
+                                                            React.createElement('button', {
+                                                                onClick: () => handleConvertToProject('starter'),
+                                                                className: "px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium transition-colors"
+                                                            }, "Starter Plan - $400 once-off"),
+                                                            React.createElement('div', { className: "absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-800 text-white text-xs rounded-lg py-2 px-3 whitespace-nowrap z-10" },
+                                                                "3 Projects • 10 Blueprints • Live HubSpot Audit • AI Recommendations"
+                                                            )
+                                                        ),
+                                                        React.createElement('div', { className: "relative group" },
+                                                            React.createElement('button', {
+                                                                onClick: () => handleConvertToProject('growth'),
+                                                                className: "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+                                                            }, "Growth Plan - $850 once-off"),
+                                                            React.createElement('div', { className: "absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-800 text-white text-xs rounded-lg py-2 px-3 whitespace-nowrap z-10" },
+                                                                "8 Projects • 25 Blueprints • Live Audit • Proactive + Reactive Recommendations"
+                                                            )
+                                                        ),
+                                                        React.createElement('div', { className: "relative group" },
+                                                            React.createElement('button', {
+                                                                onClick: () => handleConvertToProject('scale'),
+                                                                className: "px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors"
+                                                            }, "Scale Plan - $1500 once-off"),
+                                                            React.createElement('div', { className: "absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-800 text-white text-xs rounded-lg py-2 px-3 whitespace-nowrap z-10" },
+                                                                "20 Projects • Unlimited Blueprints • Live Audit • Partner Briefings"
+                                                            )
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    ),
+
+                    // AI Disclaimer
+                    React.createElement('div', { className: "bg-blue-50 border border-blue-200 rounded-lg p-4 mb-12" },
+                        React.createElement('p', { className: "text-sm text-blue-800 leading-relaxed" },
+                            "This website features content generated by artificial intelligence and is intended for informational and illustrative purposes only. We are not affiliated with, endorsed by, or sponsored by HubSpot, Inc. All company names, trademarks, and logos are the property of their respective owners. While we strive for accuracy, the AI-generated content may contain errors or outdated information. Please verify critical details independently or consult a human expert when needed."
+                        )
+                    ),
+
+                    // Phase 2.5 Features Section
+                    React.createElement('div', { className: "mb-16" },
+                        React.createElement('div', { className: "text-center mb-8" },
+                            React.createElement('h2', { className: "text-2xl md:text-3xl font-bold text-gray-900 mb-4" },
+                                "Comprehensive Platform Features"
+                            ),
+                            React.createElement('p', { className: "text-gray-600 max-w-2xl mx-auto" },
+                                "Everything you need to transform business problems into executable solutions"
+                            )
+                        ),
+                        React.createElement('div', { className: "grid grid-cols-1 md:grid-cols-2 gap-6 mb-12" },
+                            React.createElement('div', { className: "flex items-start gap-3" },
+                                React.createElement('div', { className: "text-green-600 text-xl flex-shrink-0" }, "✅"),
+                                React.createElement('span', { className: "text-gray-700" }, "Strategic Blueprints generated from your real HubSpot data")
+                            ),
+                            React.createElement('div', { className: "flex items-start gap-3" },
+                                React.createElement('div', { className: "text-green-600 text-xl flex-shrink-0" }, "✅"),
+                                React.createElement('span', { className: "text-gray-700" }, "ROI Dashboard with real-world impact forecasting")
+                            ),
+                            React.createElement('div', { className: "flex items-start gap-3" },
+                                React.createElement('div', { className: "text-green-600 text-xl flex-shrink-0" }, "✅"),
+                                React.createElement('span', { className: "text-gray-700" }, "Partner and App recommendations tied to task execution")
+                            ),
+                            React.createElement('div', { className: "flex items-start gap-3" },
+                                React.createElement('div', { className: "text-green-600 text-xl flex-shrink-0" }, "✅"),
+                                React.createElement('span', { className: "text-gray-700" }, "Task and milestone tracking with project timeline views")
+                            ),
+                            React.createElement('div', { className: "flex items-start gap-3" },
+                                React.createElement('div', { className: "text-green-600 text-xl flex-shrink-0" }, "✅"),
+                                React.createElement('span', { className: "text-gray-700" }, "AI Consultant Mode with Jobs-to-be-Done methodology")
+                            ),
+                            React.createElement('div', { className: "flex items-start gap-3" },
+                                React.createElement('div', { className: "text-green-600 text-xl flex-shrink-0" }, "✅"),
+                                React.createElement('span', { className: "text-gray-700" }, "Sandbox Simulation for testing implementation strategies")
+                            )
+                        ),
+
+                        // Enhanced Feature Cards
+                        React.createElement('div', { className: "grid grid-cols-1 md:grid-cols-3 gap-8" },
+                            React.createElement('div', { className: "text-left p-8 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-shadow" },
+                                React.createElement('div', { className: "text-4xl mb-6" }, "🧠"),
+                                React.createElement('h3', { className: "text-xl font-bold text-gray-900 mb-4 leading-tight" }, "AI Consultant Mode"),
+                                React.createElement('p', { className: "text-gray-700 leading-relaxed" }, 
+                                    "Get expert strategic advice using ", 
+                                    React.createElement('strong', { className: "text-gray-900" }, "Jobs-to-be-Done methodology"), 
+                                    ". Our consultant mode simulates expert logic with playbook suggestions, partner support recommendations, and ", 
+                                    React.createElement('strong', { className: "text-gray-900" }, "ROI modeling"), 
+                                    " based on real case studies and implementation patterns."
+                                )
+                            ),
+                            React.createElement('div', { className: "text-left p-8 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-shadow" },
+                                React.createElement('div', { className: "text-4xl mb-6" }, "🔬"),
+                                React.createElement('h3', { className: "text-xl font-bold text-gray-900 mb-4 leading-tight" }, "Sandbox Simulation"),
+                                React.createElement('p', { className: "text-gray-700 leading-relaxed" }, 
+                                    "Test implementation strategies before execution. Run ", 
+                                    React.createElement('strong', { className: "text-gray-900" }, "blueprint simulations"), 
+                                    " with estimated costs, impact projections, and ", 
+                                    React.createElement('strong', { className: "text-gray-900" }, "partner pathways"), 
+                                    ". Validate your approach with data-driven insights before committing resources."
+                                )
+                            ),
+                            React.createElement('div', { className: "text-left p-8 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-shadow" },
+                                React.createElement('div', { className: "text-4xl mb-6" }, "🤝"),
+                                React.createElement('h3', { className: "text-xl font-bold text-gray-900 mb-4 leading-tight" }, "Strategic Partner Intelligence"),
+                                React.createElement('p', { className: "text-gray-700 leading-relaxed" }, 
+                                    "Access curated partner success stories and ", 
+                                    React.createElement('strong', { className: "text-gray-900" }, "relevant case studies"), 
+                                    " dynamically matched to your blueprint goals. Get connected with the right experts for ", 
+                                    React.createElement('strong', { className: "text-gray-900" }, "specialized implementation support"), 
+                                    " when you need it most."
+                                )
+                            )
+                        )
+                    ),
+
+                    // Problem-Solution Section
+                    React.createElement('div', { className: "grid grid-cols-1 md:grid-cols-3 gap-8 mb-16" },
+                        React.createElement('div', { className: "text-left p-8 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-shadow" },
+                            React.createElement('div', { className: "text-4xl mb-6" }, "🧩"),
+                            React.createElement('h3', { className: "text-xl font-bold text-gray-900 mb-4 leading-tight" }, "You Have Big Goals — But No Clear Path to Execute in HubSpot"),
+                            React.createElement('p', { className: "text-gray-700 leading-relaxed" }, 
+                                "Whether you're a ", 
+                                React.createElement('strong', { className: "text-gray-900" }, "Marketing Director"), 
+                                " launching in new regions, a ", 
+                                React.createElement('strong', { className: "text-gray-900" }, "RevOps lead"), 
+                                " cleaning up GTM chaos, or a ", 
+                                React.createElement('strong', { className: "text-gray-900" }, "founder"), 
+                                " scaling fast — Morphed turns strategy into execution. Get ", 
+                                React.createElement('strong', { className: "text-gray-900" }, "AI-generated blueprints powered by real partner know-how"), 
+                                ", with tasks and milestones mapped to what others like you have done successfully — and what actually works."
+                            )
+                        ),
+                        React.createElement('div', { className: "text-left p-8 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-shadow" },
+                            React.createElement('div', { className: "text-4xl mb-6" }, "📉"),
+                            React.createElement('h3', { className: "text-xl font-bold text-gray-900 mb-4 leading-tight" }, "HubSpot Isn't Reflecting What Your Business Actually Needs"),
+                            React.createElement('p', { className: "text-gray-700 leading-relaxed" }, 
+                                "Morphed audits your portal against your ", 
+                                React.createElement('strong', { className: "text-gray-900" }, "business objectives"), 
+                                " — not just system errors. It highlights misalignments in data, automation, and lifecycle stages, and offers recommended fixes based on ", 
+                                React.createElement('strong', { className: "text-gray-900" }, "proven solutions implemented by top partners across industries"), 
+                                ". You don't just get advice — you get the ", 
+                                React.createElement('strong', { className: "text-gray-900" }, "why, the how, and the real-world context"), 
+                                " behind it."
+                            )
+                        ),
+                        React.createElement('div', { className: "text-left p-8 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-shadow" },
+                            React.createElement('div', { className: "text-4xl mb-6" }, "🤝"),
+                            React.createElement('h3', { className: "text-xl font-bold text-gray-900 mb-4 leading-tight" }, "You Need the Right Experts to Get Key Jobs Done"),
+                            React.createElement('p', { className: "text-gray-700 leading-relaxed" }, 
+                                "Execution doesn't happen in a vacuum. Morphed guides you through your blueprint and flags when ", 
+                                React.createElement('strong', { className: "text-gray-900" }, "partner support"), 
+                                " can help — whether for ", 
+                                React.createElement('strong', { className: "text-gray-900" }, "end-to-end projects, high-skill workflows, or co-delivery"), 
+                                ". Backed by ", 
+                                React.createElement('strong', { className: "text-gray-900" }, "case-driven partner intelligence"), 
+                                ", Morphed lets you bring experts into your plan when and where it matters most."
+                            )
+                        )
+                    ),
+
+                    // CTA Section
+                    React.createElement('div', { className: "bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl p-8 text-center" },
+                        React.createElement('h2', { className: "text-2xl md:text-3xl font-bold mb-4" },
+                            "Ready to Optimize Your HubSpot?"
+                        ),
+                        React.createElement('p', { className: "text-lg mb-8 opacity-90" },
+                            "Join hundreds of businesses already using Morphed Intelligence to maximize their HubSpot ROI"
+                        ),
+                        React.createElement('div', { className: "flex flex-col sm:flex-row gap-4 justify-center" },
+                            React.createElement('a', { 
+                                href: "/auth/login",
+                                className: "bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                            }, "Start Your Optimization"),
+                            React.createElement('a', { 
+                                href: "/how-it-works",
+                                className: "border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
+                            }, "See Platform Demo")
+                        )
+                    )
+                ),
+
+                // Footer
+                React.createElement('footer', { className: "bg-gray-900 text-white py-12" },
+                    React.createElement('div', { className: "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8" },
+                        React.createElement('div', { className: "grid grid-cols-1 md:grid-cols-4 gap-8" },
+                            React.createElement('div', null,
+                                React.createElement('div', { className: "flex items-center gap-3 mb-4" },
+                                    React.createElement('div', { className: "bg-blue-600 text-white p-2 rounded-lg" },
+                                        React.createElement('svg', { className: "w-6 h-6", fill: "currentColor", viewBox: "0 0 24 24" },
+                                            React.createElement('path', { d: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" })
+                                        )
+                                    ),
+                                    React.createElement('span', { className: "text-xl font-bold" }, "Morphed")
+                                ),
+                                React.createElement('p', { className: "text-gray-400" }, "AI-powered HubSpot optimization platform")
+                            ),
+                            React.createElement('div', null,
+                                React.createElement('h4', { className: "font-semibold mb-4" }, "Product"),
+                                React.createElement('ul', { className: "space-y-2 text-gray-400" },
+                                    React.createElement('li', null, React.createElement('a', { href: "/how-it-works", className: "hover:text-white" }, "How It Works")),
+                                    React.createElement('li', null, React.createElement('a', { href: "/pricing", className: "hover:text-white" }, "Pricing")),
+                                    React.createElement('li', null, React.createElement('a', { href: "/about", className: "hover:text-white" }, "About"))
+                                )
+                            ),
+                            React.createElement('div', null,
+                                React.createElement('h4', { className: "font-semibold mb-4" }, "Legal"),
+                                React.createElement('ul', { className: "space-y-2 text-gray-400" },
+                                    React.createElement('li', null, React.createElement('a', { href: "/privacy-policy", className: "hover:text-white" }, "Privacy Policy")),
+                                    React.createElement('li', null, React.createElement('a', { href: "/terms", className: "hover:text-white" }, "Terms")),
+                                    React.createElement('li', null, React.createElement('a', { href: "/contact", className: "hover:text-white" }, "Contact"))
+                                )
+                            ),
+                            React.createElement('div', null,
+                                React.createElement('h4', { className: "font-semibold mb-4" }, "Company"),
+                                React.createElement('p', { className: "text-gray-400 text-sm" },
+                                    "Morphed PTY LTD", React.createElement('br'),
+                                    "South Africa", React.createElement('br'),
+                                    "graeme.wilson@morphed.io"
+                                )
+                            )
+                        ),
+                        React.createElement('div', { className: "border-t border-gray-800 pt-8 mt-8 text-center text-gray-400" },
+                            React.createElement('p', null, "© 2025 Morphed PTY LTD. All rights reserved.")
+                        )
+                    )
+                )
+            );
+        }
+
+        ReactDOM.render(React.createElement(HomePage), document.getElementById('app'));
+    </script>
+</body>
+</html>

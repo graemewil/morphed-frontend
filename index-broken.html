@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morphed Intelligence - AI Blueprinting for HubSpot</title>
+    <meta name="description" content="Generate high-impact strategic blueprints using your HubSpot data. Powered by AI. No code. No hassle.">
+    <meta name="keywords" content="HubSpot AI, HubSpot Audit, Blueprint Generator, RevOps, Morphed Intelligence">
+    <link rel="canonical" href="https://morphed.io">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Morphed Intelligence",
+        "description": "AI-powered HubSpot intelligence platform for marketing teams",
+        "url": "https://morphed.io",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web"
+      }
+    </script>
+</head>
+<body>
+    <div id="app"></div>
+    
+    <script type="text/babel">
+        const { useState, useRef, useEffect } = React;
+        
+        function HomePage() {
+            const [input, setInput] = useState('');
+            const [messages, setMessages] = useState([]);
+            const [loading, setLoading] = useState(false);
+            const [showPayment, setShowPayment] = useState(false);
+            const [selectedPlan, setSelectedPlan] = useState('');
+            const messagesRef = useRef(null);
+
+            useEffect(() => {
+                if (messagesRef.current) {
+                    messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+                }
+            }, [messages]);
+
+            const generateBlueprint = async () => {
+                if (!input.trim() || loading) return;
+
+                const userMessage = {
+                    type: 'user',
+                    content: input,
+                    timestamp: new Date().toLocaleTimeString()
+                };
+
+                setMessages([userMessage]);
+                setLoading(true);
+
+                try {
+                    const response = await fetch('/api/arbot/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: `Generate a comprehensive Tier 1++ blueprint for: ${input}`,
+                            context: {
+                                source: 'homepage_blueprint',
+                                blueprint_only: true
+                            }
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        const arbotMessage = {
+                            type: 'arbot',
+                            content: data.response || 'Blueprint generated successfully.',
+                            timestamp: new Date().toLocaleTimeString(),
+                            data: data.data
+                        };
+                        setMessages(prev => [...prev, arbotMessage]);
+                    } else {
+                        throw new Error('Failed to generate blueprint');
+                    }
+                } catch (error) {
+                    const errorMessage = {
+                        type: 'arbot',
+                        content: 'Unable to generate blueprint. Please try again.',
+                        timestamp: new Date().toLocaleTimeString()
+                    };
+                    setMessages(prev => [...prev, errorMessage]);
+                }
+
+                setLoading(false);
+            };
+
+            const handleConvertToProject = (plan) => {
+                setSelectedPlan(plan);
+                setShowPayment(true);
+            };
+
+            const initiatePayment = async () => {
+                try {
+                    const response = await fetch('/api/payment/initiate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            tier: selectedPlan,
+                            userId: `guest_${Date.now()}`,
+                            email: 'guest@morphed.io'
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        window.location.href = data.authorization_url;
+                    }
+                } catch (error) {
+                    console.error('Payment initiation failed:', error);
+                }
+            };
+
+            return React.createElement('div', { className: "min-h-screen bg-gradient-to-br from-blue-50 to-purple-50" },
+                // Header
+                React.createElement('nav', { className: "bg-white shadow-sm border-b border-gray-200" },
+                    React.createElement('div', { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" },
+                        React.createElement('div', { className: "flex justify-between items-center h-16" },
+                            React.createElement('a', { href: "/", className: "flex items-center gap-3" },
+                                React.createElement('div', { className: "bg-blue-600 text-white p-2 rounded-lg" },
+                                    React.createElement('svg', { className: "w-6 h-6", fill: "currentColor", viewBox: "0 0 24 24" },
+                                        React.createElement('path', { d: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" })
+                                    )
+                                ),
+                                React.createElement('span', { className: "text-xl font-bold text-gray-900" }, "Morphed.io")
+                            ),
+                            React.createElement('div', { className: "flex items-center" },
+                                // Mobile menu button
+                                React.createElement('button', { 
+                                    className: "md:hidden p-2 rounded-lg hover:bg-gray-100",
+                                    onClick: () => {
+                                        const menu = document.getElementById('mobile-menu');
+                                        menu.classList.toggle('hidden');
+                                    }
+                                },
+                                    React.createElement('svg', { className: "w-6 h-6", fill: "currentColor", viewBox: "0 0 24 24" },
+                                        React.createElement('path', { d: "M4 6h16M4 12h16M4 18h16", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round" })
+                                    )
+                                ),
+                                // Desktop menu
+                                React.createElement('div', { className: "hidden md:flex items-center space-x-8" },
+                                    React.createElement('a', { href: "/about", className: "text-gray-600 hover:text-gray-900" }, "About"),
+                                    React.createElement('a', { href: "/how-it-works", className: "text-gray-600 hover:text-gray-900" }, "How It Works"),
+                                    React.createElement('a', { href: "/pricing", className: "text-gray-600 hover:text-gray-900" }, "Pricing"),
+                                    React.createElement('a', { href: "/auth/login", className: "bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" }, "Sign In")
+                                )
+                            )
+                        )
+                    ),
+                    // Mobile menu
+                    React.createElement('div', { 
+                        id: "mobile-menu", 
+                        className: "md:hidden hidden bg-white border-t border-gray-200" 
+                    },
+                        React.createElement('div', { className: "px-4 py-3 space-y-3" },
+                            React.createElement('a', { href: "/about", className: "block text-gray-600 hover:text-gray-900" }, "About"),
+                            React.createElement('a', { href: "/how-it-works", className: "block text-gray-600 hover:text-gray-900" }, "How It Works"),
+                            React.createElement('a', { href: "/pricing", className: "block text-gray-600 hover:text-gray-900" }, "Pricing"),
+                            React.createElement('a', { href: "/auth/login", className: "block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-center" }, "Sign In")
+                        )
+                    )
+                ),
+
+                // Hero Section
+                React.createElement('div', { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16" },
+                    React.createElement('div', { className: "text-center mb-12" },
+                        React.createElement('h1', { className: "text-5xl md:text-6xl font-bold text-gray-900 mb-6" },
+                            "Start with a Strategic Blueprint"
+                        ),
+                        React.createElement('p', { className: "text-xl text-gray-600 mb-8 max-w-4xl mx-auto" },
+                            "Morphed Intelligence simplifies planning, auditing, and execution with one intelligent command center. Generate fully contextual blueprints using HubSpot data and partner expertise."
+                        )
+                    ),
+
+                    // Blueprint Generator
+                    React.createElement('div', { className: "max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8 mb-16" },
+                        React.createElement('div', { className: "flex flex-col space-y-4" },
+                            React.createElement('div', { className: "flex space-x-4" },
+                                React.createElement('input', {
+                                    type: "text",
+                                    value: input,
+                                    onChange: (e) => setInput(e.target.value),
+                                    onKeyPress: (e) => {
+                                        if (e.key === 'Enter') {
+                                            e.preventDefault();
+                                            generateBlueprint();
+                                        }
+                                    },
+                                    placeholder: "Enter your business challenge or objective...",
+                                    className: "flex-1 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
+                                }),
+                                React.createElement('button', {
+                                    onClick: generateBlueprint,
+                                    disabled: loading || !input.trim(),
+                                    className: "px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg font-semibold"
+                                }, loading ? 'Generating...' : 'Generate Free Blueprint')
+                            ),
+
+                            // Loading indicator
+                            loading && React.createElement('div', { className: "bg-blue-50 rounded-xl p-8 text-center" },
+                                React.createElement('div', { className: "flex items-center justify-center gap-3 mb-4" },
+                                    React.createElement('div', { className: "animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600" }),
+                                    React.createElement('span', { className: "text-blue-600 font-medium" }, "Generating your Tier 1++ blueprint...")
+                                ),
+                                React.createElement('p', { className: "text-gray-600 text-sm" }, "Analyzing your request and creating a comprehensive implementation plan...")
+                            ),
+
+                            // Blueprint Output - only show after generation is complete
+                            (messages.length > 0 && !loading) && React.createElement('div', { className: "bg-gray-50 rounded-xl p-6 max-h-96 overflow-y-auto" },
+                                React.createElement('div', { ref: messagesRef, className: "space-y-4" },
+                                    messages.map((message, index) =>
+                                        React.createElement('div', { key: index, className: "flex justify-start" },
+                                            React.createElement('div', { className: "bg-white rounded-lg p-4 shadow-sm max-w-full" },
+                                                React.createElement('div', { className: "flex items-start gap-3" },
+                                                    React.createElement('div', { className: "bg-blue-100 text-blue-600 p-2 rounded-full shrink-0" },
+                                                        React.createElement('svg', { className: "w-5 h-5", fill: "currentColor", viewBox: "0 0 24 24" },
+                                                            React.createElement('path', { d: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" })
+                                                        )
+                                                    ),
+                                                    React.createElement('div', null,
+                                                        React.createElement('div', { className: "text-sm font-semibold text-gray-900 mb-2" }, "Tier 1++ Blueprint"),
+                                                        React.createElement('div', { className: "text-gray-700 whitespace-pre-wrap text-sm leading-relaxed" }, message.content),
+                                                        message.data && React.createElement('div', { className: "mt-3 p-3 bg-blue-50 rounded border border-blue-200" },
+                                                            React.createElement('pre', { className: "text-xs text-blue-800 whitespace-pre-wrap overflow-x-auto" },
+                                                                JSON.stringify(message.data, null, 2)
+                                                            )
+                                                        )
+                                                    )
+                                                ),
+                                                
+                                                // Conversion CTAs - only show after blueprint is fully generated
+                                                React.createElement('div', { className: "mt-6 pt-4 border-t border-gray-200" },
+                                                    React.createElement('p', { className: "text-sm text-gray-600 mb-4" }, "Convert this blueprint to a project and unlock full features:"),
+                                                    React.createElement('div', { className: "flex flex-wrap gap-3" },
+                                                        React.createElement('button', {
+                                                            onClick: () => handleConvertToProject('starter'),
+                                                            className: "px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-sm font-medium transition-colors"
+                                                        }, "Starter Plan - $400 once-off"),
+                                                        React.createElement('button', {
+                                                            onClick: () => handleConvertToProject('growth'),
+                                                            className: "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+                                                        }, "Growth Plan - $850 once-off"),
+                                                        React.createElement('button', {
+                                                            onClick: () => handleConvertToProject('scale'),
+                                                            className: "px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors"
+                                                        }, "Scale Plan - $1500 once-off")
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    ),
+
+                    // Features Section
+                    React.createElement('div', { className: "grid md:grid-cols-3 gap-8 max-w-5xl mx-auto" },
+                        React.createElement('div', { className: "text-center p-6" },
+                            React.createElement('div', { className: "bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" },
+                                React.createElement('svg', { className: "w-8 h-8 text-blue-600", fill: "currentColor", viewBox: "0 0 24 24" },
+                                    React.createElement('path', { d: "M13 10V3L4 14h7v7l9-11h-7z" })
+                                )
+                            ),
+                            React.createElement('h3', { className: "text-xl font-semibold text-gray-900 mb-3" }, "Intelligent Blueprints"),
+                            React.createElement('p', { className: "text-gray-600" }, "Generate comprehensive strategic blueprints using HubSpot data and AI intelligence.")
+                        ),
+                        React.createElement('div', { className: "text-center p-6" },
+                            React.createElement('div', { className: "bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" },
+                                React.createElement('svg', { className: "w-8 h-8 text-green-600", fill: "currentColor", viewBox: "0 0 24 24" },
+                                    React.createElement('path', { d: "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" })
+                                )
+                            ),
+                            React.createElement('h3', { className: "text-xl font-semibold text-gray-900 mb-3" }, "Proactive Audits"),
+                            React.createElement('p', { className: "text-gray-600" }, "Real-time portal analysis with actionable recommendations and optimization opportunities.")
+                        ),
+                        React.createElement('div', { className: "text-center p-6" },
+                            React.createElement('div', { className: "bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" },
+                                React.createElement('svg', { className: "w-8 h-8 text-purple-600", fill: "currentColor", viewBox: "0 0 24 24" },
+                                    React.createElement('path', { d: "M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2M4 1h16v2H4V1m12 4.5V9c0 1.11-.89 2-2 2h-4c-1.11 0-2-.89-2-2V5.5l2-1.5 2 1.5 2-1.5" })
+                                )
+                            ),
+                            React.createElement('h3', { className: "text-xl font-semibold text-gray-900 mb-3" }, "Partner Activation"),
+                            React.createElement('p', { className: "text-gray-600" }, "Connect with verified HubSpot partners and get expert implementation guidance.")
+                        )
+                    )
+                ),
+
+                // Payment Modal
+                showPayment && React.createElement('div', { className: "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" },
+                    React.createElement('div', { className: "bg-white rounded-xl p-8 max-w-md w-full mx-4" },
+                        React.createElement('h3', { className: "text-2xl font-bold text-gray-900 mb-4" }, "Complete Your Purchase"),
+                        React.createElement('p', { className: "text-gray-600 mb-6" },
+                            `You've selected the ${selectedPlan} plan. Click below to proceed with payment and create your account.`
+                        ),
+                        React.createElement('div', { className: "flex space-x-4" },
+                            React.createElement('button', {
+                                onClick: () => setShowPayment(false),
+                                className: "flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                            }, "Cancel"),
+                            React.createElement('button', {
+                                onClick: initiatePayment,
+                                className: "flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                            }, "Pay Now")
+                        )
+                    )
+                ),
+
+                // Footer
+                React.createElement('footer', { className: "bg-gray-900 text-white py-12" },
+                    React.createElement('div', { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" },
+                        React.createElement('div', { className: "grid md:grid-cols-4 gap-8" },
+                            React.createElement('div', null,
+                                React.createElement('div', { className: "flex items-center gap-3 mb-4" },
+                                    React.createElement('div', { className: "bg-blue-600 text-white p-2 rounded-lg" },
+                                        React.createElement('svg', { className: "w-6 h-6", fill: "currentColor", viewBox: "0 0 24 24" },
+                                            React.createElement('path', { d: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" })
+                                        )
+                                    ),
+                                    React.createElement('span', { className: "text-xl font-bold" }, "Morphed.io")
+                                ),
+                                React.createElement('p', { className: "text-gray-400" }, "AI-powered HubSpot intelligence platform for modern marketing teams.")
+                            ),
+                            React.createElement('div', null,
+                                React.createElement('h4', { className: "font-semibold mb-4" }, "Product"),
+                                React.createElement('ul', { className: "space-y-2 text-gray-400" },
+                                    React.createElement('li', null, React.createElement('a', { href: "/how-it-works", className: "hover:text-white" }, "How It Works")),
+                                    React.createElement('li', null, React.createElement('a', { href: "/pricing", className: "hover:text-white" }, "Pricing")),
+                                    React.createElement('li', null, React.createElement('a', { href: "/about", className: "hover:text-white" }, "About"))
+                                )
+                            ),
+                            React.createElement('div', null,
+                                React.createElement('h4', { className: "font-semibold mb-4" }, "Legal"),
+                                React.createElement('ul', { className: "space-y-2 text-gray-400" },
+                                    React.createElement('li', null, React.createElement('a', { href: "/privacy", className: "hover:text-white" }, "Privacy Policy")),
+                                    React.createElement('li', null, React.createElement('a', { href: "/terms", className: "hover:text-white" }, "Terms")),
+                                    React.createElement('li', null, React.createElement('a', { href: "/contact", className: "hover:text-white" }, "Contact"))
+                                )
+                            ),
+                            React.createElement('div', null,
+                                React.createElement('h4', { className: "font-semibold mb-4" }, "Legal"),
+                                React.createElement('p', { className: "text-gray-400 text-sm mb-4" }, "© 2025 Morphed Intelligence. All rights reserved."),
+                                React.createElement('p', { className: "text-gray-400 text-xs" }, "This website features content generated by artificial intelligence and is intended for informational and illustrative purposes only. We are not affiliated with, endorsed by, or sponsored by HubSpot, Inc. All company names, trademarks, and logos are the property of their respective owners."),
+                                React.createElement('p', { className: "text-gray-400 text-xs mt-2" }, "Morphed Intelligence is not affiliated with HubSpot. All data is processed securely. No HubSpot data is stored.")
+                            )
+                        )
+                    )
+                )
+            );
+        }
+
+        ReactDOM.render(React.createElement(HomePage), document.getElementById('app'));
+    </script>
+</body>
+</html>

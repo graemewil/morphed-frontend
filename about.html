@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Morphed Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div id="app"></div>
+
+    <script type="text/babel">
+        function AboutPage() {
+            return React.createElement('div', { className: "min-h-screen bg-gradient-to-br from-blue-50 to-purple-50" },
+                // Header
+                React.createElement('nav', { className: "bg-white shadow-sm border-b border-gray-200" },
+                    React.createElement('div', { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" },
+                        React.createElement('div', { className: "flex justify-between items-center h-16" },
+                            React.createElement('a', { href: "/", className: "flex items-center gap-3" },
+                                React.createElement('div', { className: "bg-blue-600 text-white p-2 rounded-lg" },
+                                    React.createElement('svg', { className: "w-6 h-6", fill: "currentColor", viewBox: "0 0 24 24" },
+                                        React.createElement('path', { d: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" })
+                                    )
+                                ),
+                                React.createElement('span', { className: "text-xl font-bold text-gray-900" }, "Morphed")
+                            ),
+                            React.createElement('div', { className: "flex items-center space-x-8" },
+                                React.createElement('a', { href: "/", className: "text-gray-600 hover:text-gray-900" }, "Home"),
+                                React.createElement('a', { href: "/how-it-works", className: "text-gray-600 hover:text-gray-900" }, "How It Works"),
+                                React.createElement('a', { href: "/pricing", className: "text-gray-600 hover:text-gray-900" }, "Pricing"),
+                                React.createElement('a', { href: "/auth/login", className: "bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" }, "Sign In")
+                            )
+                        )
+                    )
+                ),
+
+                // Main Content
+                React.createElement('div', { className: "max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16" },
+                    // Hero Section
+                    React.createElement('div', { className: "text-center mb-16" },
+                        React.createElement('h1', { className: "text-4xl md:text-5xl font-bold text-gray-900 mb-6" },
+                            "About Morphed Intelligence"
+                        ),
+                        React.createElement('p', { className: "text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed" },
+                            "Closing the gap between business problems and real outcomes inside your HubSpot environment."
+                        )
+                    ),
+
+                    // Mission Statement
+                    React.createElement('div', { className: "bg-white rounded-2xl shadow-xl p-8 md:p-12 mb-16" },
+                        React.createElement('h2', { className: "text-2xl md:text-3xl font-bold text-gray-900 mb-6" },
+                            "Our Mission"
+                        ),
+                        React.createElement('div', { className: "space-y-6 text-gray-700 leading-relaxed" },
+                            React.createElement('p', { className: "text-lg" },
+                                "Morphed Intelligence exists to close the gap between business problems and real outcomes inside your HubSpot environment."
+                            ),
+                            React.createElement('p', null,
+                                "We combine your portal data with 50,000+ AI training points to generate strategic blueprints, simulate solutions, recommend implementation partners, and calculate ROI. All actions are tracked within your project view — from blueprint to task to results."
+                            ),
+                            React.createElement('p', null,
+                                "Designed for operators, revenue leaders, and HubSpot partners alike — Morphed helps teams build faster, with more confidence, and with measurable impact."
+                            )
+                        )
+                    ),
+
+                    // What We Do
+                    React.createElement('div', { className: "grid md:grid-cols-2 gap-8 mb-16" },
+                        React.createElement('div', { className: "bg-white rounded-xl shadow-lg p-8" },
+                            React.createElement('div', { className: "text-4xl mb-4" }, "🎯"),
+                            React.createElement('h3', { className: "text-xl font-bold text-gray-900 mb-4" },
+                                "Strategic Intelligence"
+                            ),
+                            React.createElement('p', { className: "text-gray-700 leading-relaxed" },
+                                "Our AI combines real HubSpot portal data with proven implementation patterns to generate actionable blueprints. No generic advice — just context-aware recommendations that understand your specific setup and challenges."
+                            )
+                        ),
+                        React.createElement('div', { className: "bg-white rounded-xl shadow-lg p-8" },
+                            React.createElement('div', { className: "text-4xl mb-4" }, "⚡"),
+                            React.createElement('h3', { className: "text-xl font-bold text-gray-900 mb-4" },
+                                "Rapid Execution"
+                            ),
+                            React.createElement('p', { className: "text-gray-700 leading-relaxed" },
+                                "Transform business problems into executable solutions with comprehensive task breakdowns, milestone tracking, and partner recommendations. Move from strategy to implementation faster than ever before."
+                            )
+                        ),
+                        React.createElement('div', { className: "bg-white rounded-xl shadow-lg p-8" },
+                            React.createElement('div', { className: "text-4xl mb-4" }, "📊"),
+                            React.createElement('h3', { className: "text-xl font-bold text-gray-900 mb-4" },
+                                "Measurable Impact"
+                            ),
+                            React.createElement('p', { className: "text-gray-700 leading-relaxed" },
+                                "Our ROI dashboard connects implementation tasks to business outcomes. Track progress from blueprint creation through to pipeline impact and revenue attribution with real-world forecasting."
+                            )
+                        ),
+                        React.createElement('div', { className: "bg-white rounded-xl shadow-lg p-8" },
+                            React.createElement('div', { className: "text-4xl mb-4" }, "🤝"),
+                            React.createElement('h3', { className: "text-xl font-bold text-gray-900 mb-4" },
+                                "Expert Network"
+                            ),
+                            React.createElement('p', { className: "text-gray-700 leading-relaxed" },
+                                "Access curated partner intelligence with success stories and case studies dynamically matched to your goals. Connect with the right experts when specialized implementation support is needed."
+                            )
+                        )
+                    ),
+
+                    // Key Capabilities
+                    React.createElement('div', { className: "bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl p-8 md:p-12 mb-16" },
+                        React.createElement('h2', { className: "text-2xl md:text-3xl font-bold mb-8 text-center" },
+                            "Platform Capabilities"
+                        ),
+                        React.createElement('div', { className: "grid md:grid-cols-2 gap-6" },
+                            React.createElement('div', { className: "flex items-start gap-3" },
+                                React.createElement('div', { className: "text-yellow-300 text-xl flex-shrink-0" }, "✓"),
+                                React.createElement('span', null, "Live blueprint generation from real HubSpot data")
+                            ),
+                            React.createElement('div', { className: "flex items-start gap-3" },
+                                React.createElement('div', { className: "text-yellow-300 text-xl flex-shrink-0" }, "✓"),
+                                React.createElement('span', null, "AI Consultant Mode with Jobs-to-be-Done methodology")
+                            ),
+                            React.createElement('div', { className: "flex items-start gap-3" },
+                                React.createElement('div', { className: "text-yellow-300 text-xl flex-shrink-0" }, "✓"),
+                                React.createElement('span', null, "Sandbox simulation for testing strategies")
+                            ),
+                            React.createElement('div', { className: "flex items-start gap-3" },
+                                React.createElement('div', { className: "text-yellow-300 text-xl flex-shrink-0" }, "✓"),
+                                React.createElement('span', null, "ROI forecasting with impact projections")
+                            ),
+                            React.createElement('div', { className: "flex items-start gap-3" },
+                                React.createElement('div', { className: "text-yellow-300 text-xl flex-shrink-0" }, "✓"),
+                                React.createElement('span', null, "Strategic partner intelligence and case studies")
+                            ),
+                            React.createElement('div', { className: "flex items-start gap-3" },
+                                React.createElement('div', { className: "text-yellow-300 text-xl flex-shrink-0" }, "✓"),
+                                React.createElement('span', null, "Comprehensive project and task management")
+                            )
+                        )
+                    ),
+
+                    // Company Info
+                    React.createElement('div', { className: "bg-white rounded-2xl shadow-xl p-8 md:p-12 text-center" },
+                        React.createElement('h2', { className: "text-2xl md:text-3xl font-bold text-gray-900 mb-6" },
+                            "Built for HubSpot Professionals"
+                        ),
+                        React.createElement('p', { className: "text-lg text-gray-700 mb-8 leading-relaxed" },
+                            "Whether you're a Marketing Director scaling operations, a RevOps lead optimizing workflows, or a HubSpot partner delivering client solutions — Morphed Intelligence provides the strategic intelligence and execution framework you need to succeed."
+                        ),
+                        React.createElement('div', { className: "flex flex-col sm:flex-row gap-4 justify-center" },
+                            React.createElement('a', { 
+                                href: "/auth/login",
+                                className: "bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                            }, "Start Your Analysis"),
+                            React.createElement('a', { 
+                                href: "/how-it-works",
+                                className: "border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+                            }, "Learn More")
+                        )
+                    )
+                ),
+
+                // Footer
+                React.createElement('footer', { className: "bg-gray-900 text-white py-12" },
+                    React.createElement('div', { className: "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8" },
+                        React.createElement('div', { className: "grid grid-cols-1 md:grid-cols-4 gap-8" },
+                            React.createElement('div', null,
+                                React.createElement('div', { className: "flex items-center gap-3 mb-4" },
+                                    React.createElement('div', { className: "bg-blue-600 text-white p-2 rounded-lg" },
+                                        React.createElement('svg', { className: "w-6 h-6", fill: "currentColor", viewBox: "0 0 24 24" },
+                                            React.createElement('path', { d: "M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" })
+                                        )
+                                    ),
+                                    React.createElement('span', { className: "text-xl font-bold" }, "Morphed")
+                                ),
+                                React.createElement('p', { className: "text-gray-400" }, "AI-powered HubSpot optimization platform")
+                            ),
+                            React.createElement('div', null,
+                                React.createElement('h4', { className: "font-semibold mb-4" }, "Product"),
+                                React.createElement('ul', { className: "space-y-2 text-gray-400" },
+                                    React.createElement('li', null, React.createElement('a', { href: "/how-it-works", className: "hover:text-white" }, "How It Works")),
+                                    React.createElement('li', null, React.createElement('a', { href: "/pricing", className: "hover:text-white" }, "Pricing")),
+                                    React.createElement('li', null, React.createElement('a', { href: "/about", className: "hover:text-white" }, "About"))
+                                )
+                            ),
+                            React.createElement('div', null,
+                                React.createElement('h4', { className: "font-semibold mb-4" }, "Legal"),
+                                React.createElement('ul', { className: "space-y-2 text-gray-400" },
+                                    React.createElement('li', null, React.createElement('a', { href: "/privacy-policy", className: "hover:text-white" }, "Privacy Policy")),
+                                    React.createElement('li', null, React.createElement('a', { href: "/terms", className: "hover:text-white" }, "Terms")),
+                                    React.createElement('li', null, React.createElement('a', { href: "/contact", className: "hover:text-white" }, "Contact"))
+                                )
+                            ),
+                            React.createElement('div', null,
+                                React.createElement('h4', { className: "font-semibold mb-4" }, "Company"),
+                                React.createElement('p', { className: "text-gray-400 text-sm" },
+                                    "Morphed PTY LTD", React.createElement('br'),
+                                    "South Africa", React.createElement('br'),
+                                    "graeme.wilson@morphed.io"
+                                )
+                            )
+                        ),
+                        React.createElement('div', { className: "border-t border-gray-800 pt-8 mt-8 text-center text-gray-400" },
+                            React.createElement('p', null, "© 2025 Morphed PTY LTD. All rights reserved.")
+                        )
+                    )
+                )
+            );
+        }
+
+        ReactDOM.render(React.createElement(AboutPage), document.getElementById('app'));
+    </script>
+</body>
+</html>

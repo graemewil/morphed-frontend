@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARBot Intelligence Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .metric-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .chat-bubble-user {
+            background: #2563eb;
+            color: white;
+            border-radius: 18px 18px 4px 18px;
+        }
+        .chat-bubble-bot {
+            background: #f3f4f6;
+            color: #111827;
+            border-radius: 18px 18px 18px 4px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div class="max-w-md mx-auto bg-white shadow-2xl min-h-screen flex flex-col">
+            <!-- Header -->
+            <div class="gradient-bg text-white p-4 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-xl font-bold">ARBot Assistant</h1>
+                        <p class="text-blue-100 text-sm">HubSpot Intelligence Platform</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="text-xs text-blue-100">Connected</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Portal Overview Dashboard -->
+            <div class="p-4 bg-white">
+                <h2 class="text-lg font-semibold text-gray-800 mb-3">Portal Overview</h2>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="metric-card bg-blue-50 rounded-lg p-3 text-center">
+                        <div class="text-2xl font-bold text-blue-600">85</div>
+                        <div class="text-sm text-blue-700">Portal Score</div>
+                    </div>
+                    <div class="metric-card bg-green-50 rounded-lg p-3 text-center">
+                        <div class="text-2xl font-bold text-green-600">12</div>
+                        <div class="text-sm text-green-700">Active Projects</div>
+                    </div>
+                    <div class="metric-card bg-red-50 rounded-lg p-3 text-center">
+                        <div class="text-2xl font-bold text-red-600">3</div>
+                        <div class="text-sm text-red-700">Urgent Tasks</div>
+                    </div>
+                    <div class="metric-card bg-purple-50 rounded-lg p-3 text-center">
+                        <div class="text-2xl font-bold text-purple-600">8</div>
+                        <div class="text-sm text-purple-700">Workflows</div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="mt-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-3">
+                    <h3 class="text-sm font-semibold text-gray-700 mb-2">Quick Actions</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs hover:bg-blue-200 transition-colors">
+                            Analyze Portal
+                        </button>
+                        <button class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs hover:bg-green-200 transition-colors">
+                            Review Tasks
+                        </button>
+                        <button class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs hover:bg-purple-200 transition-colors">
+                            Workflow Audit
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-3 mt-4">
+                    <p class="text-sm text-gray-700">
+                        Welcome to ARBot! Click any metric above or ask me about your HubSpot portal optimization.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Chat Interface -->
+            <div class="flex-1 flex flex-col">
+                <div class="flex-1 overflow-y-auto p-4 space-y-3">
+                    <!-- Sample conversation showing typical user interaction -->
+                    <div class="flex justify-end">
+                        <div class="chat-bubble-user max-w-xs lg:max-w-md px-4 py-2">
+                            What's my portal optimization score?
+                        </div>
+                    </div>
+                    <div class="flex justify-start">
+                        <div class="chat-bubble-bot max-w-xs lg:max-w-md px-4 py-2">
+                            Your portal has an optimization score of 85/100. Key improvements needed: lead scoring setup and automated workflows for nurturing.
+                        </div>
+                    </div>
+                    <div class="flex justify-end">
+                        <div class="chat-bubble-user max-w-xs lg:max-w-md px-4 py-2">
+                            Show me the urgent tasks
+                        </div>
+                    </div>
+                    <div class="flex justify-start">
+                        <div class="chat-bubble-bot max-w-xs lg:max-w-md px-4 py-2">
+                            You have 3 urgent tasks: 
+                            • Follow up with 2 hot leads
+                            • Complete workflow setup
+                            • Review deal pipeline
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Input Area -->
+                <div class="bg-white p-4 border-t border-gray-200">
+                    <div class="flex space-x-2">
+                        <input type="text" 
+                               placeholder="Ask about your portal, tasks, or workflows..." 
+                               class="flex-1 p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                        <button class="px-4 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors text-sm font-medium">
+                            Send
+                        </button>
+                    </div>
+                    
+                    <!-- Suggested Prompts -->
+                    <div class="mt-2 flex flex-wrap gap-1">
+                        <button class="px-2 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs hover:bg-gray-200 transition-colors">
+                            Audit my workflows
+                        </button>
+                        <button class="px-2 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs hover:bg-gray-200 transition-colors">
+                            Show lead sources
+                        </button>
+                        <button class="px-2 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs hover:bg-gray-200 transition-colors">
+                            Revenue analysis
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add click handlers for metric cards
+        document.querySelectorAll('.metric-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const metric = this.querySelector('.text-sm').textContent;
+                const input = document.querySelector('input[type="text"]');
+                input.value = `Tell me more about my ${metric.toLowerCase()}`;
+                input.focus();
+            });
+        });
+        
+        // Add click handlers for quick action buttons
+        document.querySelectorAll('button').forEach(button => {
+            if (button.textContent.includes('Analyze Portal')) {
+                button.addEventListener('click', () => {
+                    document.querySelector('input[type="text"]').value = 'Analyze my portal optimization score and give recommendations';
+                });
+            }
+            if (button.textContent.includes('Review Tasks')) {
+                button.addEventListener('click', () => {
+                    document.querySelector('input[type="text"]').value = 'Show me all my urgent tasks and their priorities';
+                });
+            }
+            if (button.textContent.includes('Workflow Audit')) {
+                button.addEventListener('click', () => {
+                    document.querySelector('input[type="text"]').value = 'Run a comprehensive audit of my HubSpot workflows';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
